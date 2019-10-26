@@ -47,22 +47,40 @@ public class MainActivity extends AppCompatActivity implements Asynchtask {
     @Override
     public void processFinish(String result) throws JSONException {
 
-        Log.i("processFinish", result);
-        //txtresultado.setText(result);
+     Log.i("processFinish",result);
+        //String datos="";
+        ArrayList<String>datos=new ArrayList<String>();
         JSONObject jsonObj = new JSONObject(result);
+        ArrayList<HashMap<String, String>> contactList = new ArrayList<>();
         JSONArray contacts = jsonObj.getJSONArray("contacts");
-        String contactos = "<ul>";
-        for (int i = 0; i<contacts.length(); i++ )
-        {
-            JSONObject c = contacts.getJSONObject(i);
-            contactos += "<li> ID: " + c.getString("id")  +"\r\n Nombre: " + c.getString("name")+ "\r\n Email: "+ c.getString("email")+ "\r\n Direccion: "+ c.getString("address")+ "\r\n Genero: "+ c.getString("gender")+"</li>";
+        for (int i=0; i<contacts.length();i++){
+            JSONObject obj= contacts.getJSONObject(i);
+            String id =obj.getString("id");
+            String name=obj.getString("name");
+            String email=obj.getString("email");
+            String address=obj.getString("address");
+            String gender=obj.getString("gender");
 
-            JSONObject phone = c.getJSONObject("phone");
-            contactos += "<li>Mobile: " + phone.getString("mobile")+ "\r\n Home: "+ phone.getString("home")+ "\r\n Office: " +
-                    ""+ phone.getString("office")+"</li>";
+            JSONObject phone= obj.getJSONObject("phone");
+            String mobile= phone.getString("mobile");
+            String home = phone.getString("home");
+            String office=phone.getString("office");
+
+            HashMap<String, String> contactos = new HashMap<String, String>();
+            contactos.put("id",id);
+            contactos.put("name",name);
+            contactos.put("email",email);
+            contactos.put("address",address);
+            contactos.put("mobile",mobile);
+            contactList.add(contactos);
+
+            String dts=name+"\n"+mobile;
+            datos.add(dts);
         }
-        //txtresultado.setText(contactos);
-        contactos += "</ul>";
-        lstOpciones.getAdapter();
+                ArrayAdapter adaptadornoticias=new ArrayAdapter(this, android.R.layout.simple_list_item_1,datos);
+
+        ListView lstOpciones = (ListView)findViewById(R.id.lstContactos);
+
+        lstOpciones.setAdapter(adaptadornoticias);
     }
 }
